@@ -71,8 +71,7 @@ const plans = [
 ];
 
 export default function PricingPage() {
-  const [comingSoonPlan, setComingSoonPlan] = useState(null);
-
+  const [comingSoonPlan, setComingSoonPlan] = useState<string | null>(null);
   return (
     <main className="min-h-screen bg-void">
       <Nav />
