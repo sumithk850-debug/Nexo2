@@ -9,7 +9,7 @@ interface IncomingMessage {
   content: string;
 }
 
-const GITHUB_ENDPOINT = "https://models.inference.ai.azure.com/chat/completions";
+const GITHUB_ENDPOINT = "https://models.github.ai/inference/chat/completions";
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
 export async function POST(req: NextRequest) {
@@ -65,8 +65,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Re-stream the SSE response, extracting only text deltas so the
-    // client never sees provider-specific payload shape (keeps branding hidden).
     const encoder = new TextEncoder();
     const decoder = new TextDecoder();
 
