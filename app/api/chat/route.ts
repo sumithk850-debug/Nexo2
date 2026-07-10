@@ -50,6 +50,9 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: config.model,
         stream: true,
+        temperature: 1.0,
+        top_p: 1.0,
+        max_tokens: 1000,
         messages: [
           { role: "system", content: config.systemPrompt },
           ...messages.map((m) => ({ role: m.role, content: m.content })),
