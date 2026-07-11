@@ -26,7 +26,7 @@ export function Nav() {
 
         <Link
           href="/chat"
-          className="rounded-full bg-cyan px-5 py-2 text-sm font-semibold text-void transition hover:bg-cyan-glow"
+          className="rounded-full bg-cyan px-5 py-2 text-sm font-semibold text-white transition hover:bg-cyan-dim"
         >
           Try NEXO free
         </Link>
