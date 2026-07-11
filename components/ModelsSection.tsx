@@ -4,12 +4,12 @@ const tierColor: Record<string, string> = {
   Free: "text-ink-muted border-edge",
   Galex: "text-cyan border-cyan/40",
   Brainex: "text-indigo border-indigo/40",
-  Craft: "text-cyan-glow border-cyan-glow/40",
+  Craft: "text-cyan-dim border-cyan/60",
 };
 
 export function ModelsSection() {
   return (
-    <section id="models" className="border-t border-edge/60 bg-void py-24">
+    <section id="models" className="border-t border-edge bg-void py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-14 max-w-2xl">
           <span className="font-mono text-xs uppercase tracking-widest text-cyan">
@@ -28,7 +28,7 @@ export function ModelsSection() {
           {NEXO_MODELS.map((model) => (
             <div
               key={model.id}
-              className="group relative overflow-hidden rounded-2xl border border-edge bg-panel p-6 transition hover:border-cyan/40"
+              className="group relative overflow-hidden rounded-2xl border border-edge bg-panel p-6 shadow-sm transition hover:border-cyan/40 hover:shadow-md"
             >
               <div
                 className={`inline-block rounded-full border px-2.5 py-0.5 font-mono text-[10px] tracking-widest ${tierColor[model.tier]}`}
