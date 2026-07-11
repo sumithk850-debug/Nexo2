@@ -1,23 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { ModelPicker } from "./ModelPicker";
 import { Signal } from "./Signal";
-import type { NexoModelId } from "@/lib/models";
-import { Plus, X } from "lucide-react";
+import { Plus, X, MessageSquare, Trash2 } from "lucide-react";
+import type { DbChat } from "@/lib/supabase";
 
 export function ChatSidebar({
-  selected,
-  onSelect,
-  unlockedTiers,
+  chats,
+  activeChatId,
+  onSelectChat,
   onNewChat,
+  onDeleteChat,
   open,
   onClose,
 }: {
-  selected: NexoModelId;
-  onSelect: (id: NexoModelId) => void;
-  unlockedTiers: string[];
+  chats: DbChat[];
+  activeChatId: string | null;
+  onSelectChat: (id: string) => void;
   onNewChat: () => void;
+  onDeleteChat: (id: string) => void;
   open: boolean;
   onClose: () => void;
 }) {
@@ -64,13 +65,48 @@ export function ChatSidebar({
 
         <div className="flex-1 overflow-y-auto px-4 pb-4">
           <p className="mb-2 px-1 font-mono text-[10px] uppercase tracking-widest text-ink-faint">
-            Models
+            Chats
           </p>
-          <ModelPicker
-            selected={selected}
-            onSelect={onSelect}
-            unlockedTiers={unlockedTiers}
-          />
+
+          {chats.length === 0 ? (
+            <p className="px-1 text-xs text-ink-faint">
+              No conversations yet.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-1">
+              {chats.map((chat) => (
+                <div
+                  key={chat.id}
+                  className={`group flex items-center gap-2 rounded-lg px-3 py-2.5 transition ${
+                    activeChatId === chat.id
+                      ? "bg-panel-raised"
+                      : "hover:bg-panel-raised/60"
+                  }`}
+                >
+                  <button
+                    onClick={() => onSelectChat(chat.id)}
+                    className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                  >
+                    <MessageSquare className="h-3.5 w-3.5 flex-shrink-0 text-ink-faint" />
+                    <span
+                      className={`truncate text-sm ${
+                        activeChatId === chat.id ? "text-cyan" : "text-ink"
+                      }`}
+                    >
+                      {chat.title}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => onDeleteChat(chat.id)}
+                    className="flex-shrink-0 text-ink-faint opacity-0 transition hover:text-red-400 group-hover:opacity-100"
+                    aria-label="Delete chat"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="border-t border-edge p-4">
