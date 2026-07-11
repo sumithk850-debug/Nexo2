@@ -6,6 +6,7 @@ import { ChatInput } from "@/components/ChatInput";
 import { MessageBubble } from "@/components/MessageBubble";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { Signal } from "@/components/Signal";
+import { AnnouncementBanner } from "@/components/AnnouncementBanner";
 import { getPublicModel, type NexoModelId } from "@/lib/models";
 import type { ChatMessage } from "@/lib/types";
 import { getSessionId } from "@/lib/session";
@@ -241,6 +242,8 @@ export default function ChatPage() {
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
+        <AnnouncementBanner />
+
         <div ref={scrollRef} className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
             <EmptyState modelName={activeModel?.name ?? ""} />
@@ -317,4 +320,4 @@ function EmptyState({ modelName }: { modelName: string }) {
       </div>
     </div>
   );
-              }
+    }
