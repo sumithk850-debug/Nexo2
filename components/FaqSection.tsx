@@ -19,7 +19,7 @@ const faqs = [
 
 export function FaqSection() {
   return (
-    <section id="faq" className="border-t border-edge/60 bg-void py-24">
+    <section id="faq" className="border-t border-edge bg-void py-24">
       <div className="mx-auto max-w-3xl px-6">
         <span className="font-mono text-xs uppercase tracking-widest text-cyan">
           Questions
@@ -28,7 +28,7 @@ export function FaqSection() {
           Good to know
         </h2>
 
-        <div className="mt-10 divide-y divide-edge/60 border-t border-edge/60">
+        <div className="mt-10 divide-y divide-edge border-t border-edge">
           {faqs.map((item) => (
             <details key={item.q} className="group py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between font-display text-base font-semibold text-ink">
