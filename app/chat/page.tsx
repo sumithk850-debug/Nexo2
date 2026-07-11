@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { ChatInput } from "@/components/ChatInput";
 import { MessageBubble } from "@/components/MessageBubble";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { Signal } from "@/components/Signal";
-import { NEXO_MODELS, getPublicModel, type NexoModelId } from "@/lib/models";
+import { getPublicModel, type NexoModelId } from "@/lib/models";
 import type { ChatMessage } from "@/lib/types";
 import { getSessionId } from "@/lib/session";
 import type { DbChat } from "@/lib/supabase";
-import { ChevronDown, Menu } from "lucide-react";
+import { X, FileText } from "lucide-react";
 
 const UNLOCKED_TIERS = ["Free"];
 
@@ -21,12 +21,11 @@ export default function ChatPage() {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [modelMenuOpen, setModelMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Init session + load chat list on mount
   useEffect(() => {
     const sid = getSessionId();
     setSessionId(sid);
@@ -43,7 +42,7 @@ export default function ChatPage() {
       const data = await res.json();
       if (data.chats) setChats(data.chats);
     } catch {
-      // silently ignore — history is a nice-to-have, not critical path
+      // history is a nice-to-have, not critical path
     }
   }
 
@@ -100,29 +99,40 @@ export default function ChatPage() {
         body: JSON.stringify({ role, content, modelId }),
       });
     } catch {
-      // non-critical — chat continues even if persistence fails
+      // non-critical
     }
+  }
+
+  function handleAttach(file: File) {
+    setAttachedFile(file);
   }
 
   async function handleSend() {
     const text = input.trim();
-    if (!text || isStreaming) return;
+    if ((!text && !attachedFile) || isStreaming) return;
 
     const chatId = await ensureChat();
 
-    const userMsg: ChatMessage = { id: crypto.randomUUID(), role: "user", content: text };
+    // For now, attached files are noted in the message text since the
+    // underlying models are accessed via text-only chat completions.
+    // Image/document understanding can be added later via multimodal payloads.
+    const messageText = attachedFile
+      ? `${text}\n\n[Attached file: ${attachedFile.name}]`
+      : text;
+
+    const userMsg: ChatMessage = { id: crypto.randomUUID(), role: "user", content: messageText };
     const assistantId = crypto.randomUUID();
 
     const nextMessages = [...messages, userMsg];
     setMessages([...nextMessages, { id: assistantId, role: "assistant", content: "", modelId: selectedModel }]);
     setInput("");
+    setAttachedFile(null);
     setIsStreaming(true);
 
-    if (chatId) saveMessage(chatId, "user", text);
+    if (chatId) saveMessage(chatId, "user", messageText);
 
-    // Auto-title the chat from the first message
     if (chatId && messages.length === 0) {
-      const title = text.slice(0, 40) + (text.length > 40 ? "…" : "");
+      const title = messageText.slice(0, 40) + (messageText.length > 40 ? "…" : "");
       fetch("/api/chats", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -178,6 +188,7 @@ export default function ChatPage() {
     setActiveChatId(null);
     setMessages([]);
     setInput("");
+    setAttachedFile(null);
   }
 
   async function handleSelectChat(chatId: string) {
@@ -214,55 +225,6 @@ export default function ChatPage() {
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-3 border-b border-edge px-4 py-3">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="text-ink-muted hover:text-ink md:hidden"
-            aria-label="Open sidebar"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-
-          <div className="relative">
-            <button
-              onClick={() => setModelMenuOpen((v) => !v)}
-              className="flex items-center gap-1.5 rounded-full border border-edge bg-panel px-3 py-1.5 text-xs font-medium text-ink transition hover:border-cyan/40"
-            >
-              {activeModel?.name}
-              <ChevronDown className="h-3.5 w-3.5 text-ink-muted" />
-            </button>
-
-            {modelMenuOpen && (
-              <div className="absolute left-0 top-full z-50 mt-2 w-72 rounded-xl border border-edge bg-panel-raised p-1.5 shadow-2xl">
-                {NEXO_MODELS.map((model) => {
-                  const isLocked = !UNLOCKED_TIERS.includes(model.tier);
-                  return (
-                    <button
-                      key={model.id}
-                      onClick={() => {
-                        if (isLocked) return;
-                        setSelectedModel(model.id);
-                        setModelMenuOpen(false);
-                      }}
-                      disabled={isLocked}
-                      className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition ${
-                        model.id === selectedModel ? "bg-void" : "hover:bg-void/60"
-                      } ${isLocked ? "cursor-not-allowed opacity-50" : ""}`}
-                    >
-                      <div className="min-w-0">
-                        <p className="truncate font-display text-sm font-semibold text-ink">
-                          {model.name}
-                        </p>
-                        <p className="truncate text-xs text-ink-muted">{model.tagline}</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </header>
-
         <div ref={scrollRef} className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
             <EmptyState modelName={activeModel?.name ?? ""} />
@@ -278,12 +240,32 @@ export default function ChatPage() {
           )}
         </div>
 
+        {attachedFile && (
+          <div className="mx-auto flex w-full max-w-3xl items-center gap-2 px-4 pb-2">
+            <div className="flex items-center gap-2 rounded-lg border border-edge bg-panel px-3 py-1.5 text-xs text-ink-muted">
+              <FileText className="h-3.5 w-3.5 text-cyan" />
+              <span className="max-w-[200px] truncate">{attachedFile.name}</span>
+              <button
+                onClick={() => setAttachedFile(null)}
+                className="text-ink-faint hover:text-ink"
+                aria-label="Remove attachment"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
         <ChatInput
           value={input}
           onChange={setInput}
           onSend={handleSend}
           disabled={isStreaming}
           onOpenSidebar={() => setSidebarOpen(true)}
+          selectedModel={selectedModel}
+          onSelectModel={setSelectedModel}
+          unlockedTiers={UNLOCKED_TIERS}
+          onAttach={handleAttach}
         />
       </div>
     </div>
@@ -305,7 +287,7 @@ function EmptyState({ modelName }: { modelName: string }) {
         Chatting with {modelName}
       </h2>
       <p className="mt-2 max-w-sm text-sm text-ink-muted">
-        Ask anything. Switch models anytime from the header.
+        Ask anything. Switch models anytime from the input bar.
       </p>
       <div className="mt-8 grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
         {suggestions.map((s) => (
