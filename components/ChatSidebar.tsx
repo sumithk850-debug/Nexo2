@@ -27,13 +27,13 @@ export function ChatSidebar({
       {/* Mobile overlay */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-void/80 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-ink/40 backdrop-blur-sm md:hidden"
           onClick={onClose}
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-edge bg-panel transition-transform md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-edge bg-panel-raised transition-transform md:static md:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -56,7 +56,7 @@ export function ChatSidebar({
         <div className="p-4">
           <button
             onClick={onNewChat}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-edge px-4 py-2.5 text-sm font-medium text-ink transition hover:border-cyan/40 hover:bg-panel-raised"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-edge bg-panel px-4 py-2.5 text-sm font-medium text-ink transition hover:border-cyan/40"
           >
             <Plus className="h-4 w-4" />
             New chat
@@ -79,8 +79,8 @@ export function ChatSidebar({
                   key={chat.id}
                   className={`group flex items-center gap-2 rounded-lg px-3 py-2.5 transition ${
                     activeChatId === chat.id
-                      ? "bg-panel-raised"
-                      : "hover:bg-panel-raised/60"
+                      ? "bg-panel shadow-sm"
+                      : "hover:bg-panel/60"
                   }`}
                 >
                   <button
@@ -98,7 +98,7 @@ export function ChatSidebar({
                   </button>
                   <button
                     onClick={() => onDeleteChat(chat.id)}
-                    className="flex-shrink-0 text-ink-faint opacity-0 transition hover:text-red-400 group-hover:opacity-100"
+                    className="flex-shrink-0 text-ink-faint opacity-0 transition hover:text-red-500 group-hover:opacity-100"
                     aria-label="Delete chat"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -112,7 +112,7 @@ export function ChatSidebar({
         <div className="border-t border-edge p-4">
           <Link
             href="/pricing"
-            className="block rounded-lg bg-gradient-to-r from-indigo/20 to-cyan/10 p-4 transition hover:from-indigo/30 hover:to-cyan/20"
+            className="block rounded-lg border border-edge bg-panel p-4 transition hover:border-cyan/40"
           >
             <p className="font-display text-sm font-semibold text-ink">
               Unlock all models
