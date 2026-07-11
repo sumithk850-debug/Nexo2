@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { Signal } from "./Signal";
-import { Plus, X, MessageSquare, Trash2 } from "lucide-react";
+import { Plus, X, MessageSquare, Trash2, LogIn, LogOut, User } from "lucide-react";
 import type { DbChat } from "@/lib/supabase";
+import type { AuthUser } from "@/lib/auth";
 
 export function ChatSidebar({
   chats,
@@ -13,6 +14,9 @@ export function ChatSidebar({
   onDeleteChat,
   open,
   onClose,
+  user,
+  onOpenAuth,
+  onSignOut,
 }: {
   chats: DbChat[];
   activeChatId: string | null;
@@ -21,6 +25,9 @@ export function ChatSidebar({
   onDeleteChat: (id: string) => void;
   open: boolean;
   onClose: () => void;
+  user: AuthUser | null;
+  onOpenAuth: () => void;
+  onSignOut: () => void;
 }) {
   return (
     <>
@@ -110,9 +117,35 @@ export function ChatSidebar({
         </div>
 
         <div className="border-t border-edge p-4">
+          {user ? (
+            <div className="flex items-center justify-between rounded-lg border border-edge bg-panel px-3 py-2.5">
+              <div className="flex min-w-0 items-center gap-2">
+                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-cyan/15 text-cyan">
+                  <User className="h-3.5 w-3.5" />
+                </div>
+                <span className="truncate text-xs text-ink-muted">{user.email}</span>
+              </div>
+              <button
+                onClick={onSignOut}
+                className="flex-shrink-0 text-ink-faint hover:text-ink"
+                aria-label="Sign out"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onOpenAuth}
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-edge bg-panel px-4 py-2.5 text-sm font-medium text-ink transition hover:border-cyan/40"
+            >
+              <LogIn className="h-4 w-4" />
+              Sign up / Sign in
+            </button>
+          )}
+
           <Link
             href="/pricing"
-            className="block rounded-lg border border-edge bg-panel p-4 transition hover:border-cyan/40"
+            className="mt-3 block rounded-lg border border-edge bg-panel p-4 transition hover:border-cyan/40"
           >
             <p className="font-display text-sm font-semibold text-ink">
               Unlock all models
