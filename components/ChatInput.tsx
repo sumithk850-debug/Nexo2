@@ -45,14 +45,14 @@ export function ChatInput({
   return (
     <div className="border-t border-edge bg-void/95 px-4 py-4 backdrop-blur-sm">
       <div className="mx-auto max-w-3xl">
-        <div className="rounded-2xl border border-edge bg-panel px-3 pb-2.5 pt-3 focus-within:border-cyan/50">
+        <div className="rounded-2xl border border-edge bg-panel px-3 pb-2.5 pt-3 shadow-sm focus-within:border-cyan/50">
           <textarea
             ref={ref}
             rows={1}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Message NEXO…"
+            placeholder="Chat with NEXO…"
             className="max-h-40 w-full resize-none bg-transparent px-1 py-1 text-sm text-ink placeholder:text-ink-faint focus:outline-none"
           />
 
@@ -91,7 +91,7 @@ export function ChatInput({
             <button
               onClick={onSend}
               disabled={disabled || !value.trim()}
-              className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-cyan text-void transition disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-cyan text-white transition disabled:cursor-not-allowed disabled:opacity-30"
               aria-label="Send message"
             >
               <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
