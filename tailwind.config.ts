@@ -8,23 +8,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        void: "#050810",
-        panel: "#0A1128",
-        "panel-raised": "#101A3A",
-        edge: "#1C2951",
+        void: "#F5F4EF",
+        panel: "#FFFFFF",
+        "panel-raised": "#FBFAF7",
+        edge: "#E5E2D9",
         cyan: {
-          DEFAULT: "#00E5FF",
-          dim: "#00A8BF",
-          glow: "#5FFBF1",
+          DEFAULT: "#D97757",
+          dim: "#C15F3C",
+          glow: "#E89478",
         },
         indigo: {
-          DEFAULT: "#3D5AFE",
-          dim: "#2A3E9E",
+          DEFAULT: "#B85C38",
+          dim: "#8F4529",
         },
         ink: {
-          DEFAULT: "#E8ECFB",
-          muted: "#7A8AB8",
-          faint: "#4A5580",
+          DEFAULT: "#1F1E1C",
+          muted: "#6B6862",
+          faint: "#A8A49A",
         },
       },
       fontFamily: {
@@ -34,9 +34,9 @@ const config: Config = {
       },
       backgroundImage: {
         "signal-gradient":
-          "linear-gradient(90deg, transparent 0%, #00E5FF 50%, transparent 100%)",
+          "linear-gradient(90deg, transparent 0%, #D97757 50%, transparent 100%)",
         "grid-fade":
-          "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(61,90,254,0.25), transparent)",
+          "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(217,119,87,0.12), transparent)",
       },
       keyframes: {
         pulse_signal: {
