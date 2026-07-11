@@ -1,31 +1,114 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { ChatInput } from "@/components/ChatInput";
 import { MessageBubble } from "@/components/MessageBubble";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { Signal } from "@/components/Signal";
-import { getPublicModel, type NexoModelId } from "@/lib/models";
+import { NEXO_MODELS, getPublicModel, type NexoModelId } from "@/lib/models";
 import type { ChatMessage } from "@/lib/types";
+import { getSessionId } from "@/lib/session";
+import type { DbChat } from "@/lib/supabase";
+import { ChevronDown, Menu } from "lucide-react";
 
 const UNLOCKED_TIERS = ["Free"];
 
 export default function ChatPage() {
+  const [sessionId, setSessionId] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<NexoModelId>("nexio-1.1");
+  const [chats, setChats] = useState<DbChat[]>([]);
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [modelMenuOpen, setModelMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Init session + load chat list on mount
+  useEffect(() => {
+    const sid = getSessionId();
+    setSessionId(sid);
+    if (sid) loadChats(sid);
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, isStreaming]);
 
+  async function loadChats(sid: string) {
+    try {
+      const res = await fetch(`/api/chats?sessionId=${sid}`);
+      const data = await res.json();
+      if (data.chats) setChats(data.chats);
+    } catch {
+      // silently ignore — history is a nice-to-have, not critical path
+    }
+  }
+
+  async function loadMessages(chatId: string) {
+    try {
+      const res = await fetch(`/api/chats/${chatId}/messages`);
+      const data = await res.json();
+      if (data.messages) {
+        setMessages(
+          data.messages.map((m: any) => ({
+            id: m.id,
+            role: m.role,
+            content: m.content,
+            modelId: m.model_id,
+          }))
+        );
+      }
+    } catch {
+      setMessages([]);
+    }
+  }
+
+  async function ensureChat(): Promise<string | null> {
+    if (activeChatId) return activeChatId;
+    if (!sessionId) return null;
+
+    try {
+      const res = await fetch("/api/chats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          title: "New chat",
+          modelId: selectedModel,
+        }),
+      });
+      const data = await res.json();
+      if (data.chat) {
+        setActiveChatId(data.chat.id);
+        setChats((prev) => [data.chat, ...prev]);
+        return data.chat.id;
+      }
+    } catch {
+      // fall through
+    }
+    return null;
+  }
+
+  async function saveMessage(chatId: string, role: "user" | "assistant", content: string, modelId?: string) {
+    try {
+      await fetch(`/api/chats/${chatId}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, content, modelId }),
+      });
+    } catch {
+      // non-critical — chat continues even if persistence fails
+    }
+  }
+
   async function handleSend() {
     const text = input.trim();
     if (!text || isStreaming) return;
+
+    const chatId = await ensureChat();
 
     const userMsg: ChatMessage = { id: crypto.randomUUID(), role: "user", content: text };
     const assistantId = crypto.randomUUID();
@@ -34,6 +117,21 @@ export default function ChatPage() {
     setMessages([...nextMessages, { id: assistantId, role: "assistant", content: "", modelId: selectedModel }]);
     setInput("");
     setIsStreaming(true);
+
+    if (chatId) saveMessage(chatId, "user", text);
+
+    // Auto-title the chat from the first message
+    if (chatId && messages.length === 0) {
+      const title = text.slice(0, 40) + (text.length > 40 ? "…" : "");
+      fetch("/api/chats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, title, modelId: selectedModel }),
+      }).catch(() => {});
+      setChats((prev) =>
+        prev.map((c) => (c.id === chatId ? { ...c, title } : c))
+      );
+    }
 
     try {
       const res = await fetch("/api/chat", {
@@ -59,6 +157,10 @@ export default function ChatPage() {
           prev.map((m) => (m.id === assistantId ? { ...m, content: accumulated } : m))
         );
       }
+
+      if (chatId && accumulated) {
+        saveMessage(chatId, "assistant", accumulated, selectedModel);
+      }
     } catch {
       setMessages((prev) =>
         prev.map((m) =>
@@ -73,8 +175,28 @@ export default function ChatPage() {
   }
 
   function handleNewChat() {
+    setActiveChatId(null);
     setMessages([]);
     setInput("");
+  }
+
+  async function handleSelectChat(chatId: string) {
+    setActiveChatId(chatId);
+    setSidebarOpen(false);
+    await loadMessages(chatId);
+  }
+
+  async function handleDeleteChat(chatId: string) {
+    setChats((prev) => prev.filter((c) => c.id !== chatId));
+    if (activeChatId === chatId) {
+      setActiveChatId(null);
+      setMessages([]);
+    }
+    try {
+      await fetch(`/api/chats?id=${chatId}`, { method: "DELETE" });
+    } catch {
+      // list already updated optimistically
+    }
   }
 
   const activeModel = getPublicModel(selectedModel);
@@ -82,27 +204,63 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen bg-void">
       <ChatSidebar
-        selected={selectedModel}
-        onSelect={(id) => {
-          setSelectedModel(id);
-          setSidebarOpen(false);
-        }}
-        unlockedTiers={UNLOCKED_TIERS}
+        chats={chats}
+        activeChatId={activeChatId}
+        onSelectChat={handleSelectChat}
         onNewChat={handleNewChat}
+        onDeleteChat={handleDeleteChat}
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-3 border-b border-edge px-4 py-3 md:hidden">
+        <header className="flex items-center gap-3 border-b border-edge px-4 py-3">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-ink-muted hover:text-ink"
+            className="text-ink-muted hover:text-ink md:hidden"
             aria-label="Open sidebar"
           >
-            <Signal size="sm" />
+            <Menu className="h-5 w-5" />
           </button>
-          <p className="font-display text-sm font-semibold text-ink">{activeModel?.name}</p>
+
+          <div className="relative">
+            <button
+              onClick={() => setModelMenuOpen((v) => !v)}
+              className="flex items-center gap-1.5 rounded-full border border-edge bg-panel px-3 py-1.5 text-xs font-medium text-ink transition hover:border-cyan/40"
+            >
+              {activeModel?.name}
+              <ChevronDown className="h-3.5 w-3.5 text-ink-muted" />
+            </button>
+
+            {modelMenuOpen && (
+              <div className="absolute left-0 top-full z-50 mt-2 w-72 rounded-xl border border-edge bg-panel-raised p-1.5 shadow-2xl">
+                {NEXO_MODELS.map((model) => {
+                  const isLocked = !UNLOCKED_TIERS.includes(model.tier);
+                  return (
+                    <button
+                      key={model.id}
+                      onClick={() => {
+                        if (isLocked) return;
+                        setSelectedModel(model.id);
+                        setModelMenuOpen(false);
+                      }}
+                      disabled={isLocked}
+                      className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition ${
+                        model.id === selectedModel ? "bg-void" : "hover:bg-void/60"
+                      } ${isLocked ? "cursor-not-allowed opacity-50" : ""}`}
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate font-display text-sm font-semibold text-ink">
+                          {model.name}
+                        </p>
+                        <p className="truncate text-xs text-ink-muted">{model.tagline}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </header>
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto">
@@ -147,7 +305,7 @@ function EmptyState({ modelName }: { modelName: string }) {
         Chatting with {modelName}
       </h2>
       <p className="mt-2 max-w-sm text-sm text-ink-muted">
-        Ask anything. Switch models anytime from the sidebar.
+        Ask anything. Switch models anytime from the header.
       </p>
       <div className="mt-8 grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
         {suggestions.map((s) => (
