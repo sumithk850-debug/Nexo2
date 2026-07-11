@@ -113,9 +113,6 @@ export default function ChatPage() {
 
     const chatId = await ensureChat();
 
-    // For now, attached files are noted in the message text since the
-    // underlying models are accessed via text-only chat completions.
-    // Image/document understanding can be added later via multimodal payloads.
     const messageText = attachedFile
       ? `${text}\n\n[Attached file: ${attachedFile.name}]`
       : text;
@@ -149,9 +146,28 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           modelId: selectedModel,
+          sessionId,
           messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
+
+      if (res.status === 429) {
+        const errData = await res.json().catch(() => null);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId
+              ? {
+                  ...m,
+                  content:
+                    errData?.message ??
+                    "You've reached today's message limit. Come back tomorrow, or upgrade for unlimited access.",
+                }
+              : m
+          )
+        );
+        setIsStreaming(false);
+        return;
+      }
 
       if (!res.body) throw new Error("No response stream");
 
@@ -301,4 +317,4 @@ function EmptyState({ modelName }: { modelName: string }) {
       </div>
     </div>
   );
-}
+              }
