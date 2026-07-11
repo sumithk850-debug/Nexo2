@@ -7,16 +7,33 @@ import { MessageBubble } from "@/components/MessageBubble";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { Signal } from "@/components/Signal";
 import { AnnouncementBanner } from "@/components/AnnouncementBanner";
+import { AuthModal } from "@/components/AuthModal";
 import { getPublicModel, type NexoModelId } from "@/lib/models";
 import type { ChatMessage } from "@/lib/types";
 import { getSessionId } from "@/lib/session";
-import type { DbChat } from "@/lib/supabase";
+import { supabase, type DbChat } from "@/lib/supabase";
+import { getCurrentUser, onAuthStateChange, signOut, type AuthUser } from "@/lib/auth";
 import { X, FileText } from "lucide-react";
 
 const UNLOCKED_TIERS = ["Free"];
 
+const WELCOME_MESSAGE = `Thank you for joining NEXO AI! 🎉
+
+I'm so glad you're here. From now on, your conversations will be saved to your account — sign in from any device and pick up right where you left off.
+
+A few things to try:
+- Switch between all 5 NEXO models from the input bar
+- Attach a file or photo to a message
+- Ask me anything, in Sinhala or English
+
+Welcome aboard — let's build something great together.
+
+— NEXO AI`;
+
 export default function ChatPage() {
   const [sessionId, setSessionId] = useState<string>("");
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState<NexoModelId>("nexio-1.1");
   const [chats, setChats] = useState<DbChat[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -31,6 +48,10 @@ export default function ChatPage() {
     const sid = getSessionId();
     setSessionId(sid);
     if (sid) loadChats(sid);
+
+    getCurrentUser().then((u) => setUser(u));
+    const subscription = onAuthStateChange((u) => setUser(u));
+    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -106,6 +127,33 @@ export default function ChatPage() {
 
   function handleAttach(file: File) {
     setAttachedFile(file);
+  }
+
+  async function handleAuthSuccess(isNewUser: boolean) {
+    const currentUser = await getCurrentUser();
+    setUser(currentUser);
+
+    if (isNewUser && currentUser) {
+      // Show the welcome message directly in the current chat window.
+      const welcomeMsg: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: WELCOME_MESSAGE,
+        modelId: selectedModel,
+      };
+      setMessages((prev) => [...prev, welcomeMsg]);
+
+      // Mark as welcomed in the DB so we never repeat this on future logins.
+      await supabase
+        .from("profiles")
+        .update({ welcomed: true })
+        .eq("id", currentUser.id);
+    }
+  }
+
+  async function handleSignOut() {
+    await signOut();
+    setUser(null);
   }
 
   async function handleSend() {
@@ -239,6 +287,9 @@ export default function ChatPage() {
         onDeleteChat={handleDeleteChat}
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        user={user}
+        onOpenAuth={() => setAuthModalOpen(true)}
+        onSignOut={handleSignOut}
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -287,6 +338,12 @@ export default function ChatPage() {
           onAttach={handleAttach}
         />
       </div>
+
+      <AuthModal
+        open={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onSuccess={handleAuthSuccess}
+      />
     </div>
   );
 }
@@ -320,4 +377,4 @@ function EmptyState({ modelName }: { modelName: string }) {
       </div>
     </div>
   );
-    }
+}
