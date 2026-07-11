@@ -30,7 +30,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="border-t border-edge/60 bg-panel/40 py-24">
+    <section className="border-t border-edge bg-panel-raised py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-14 max-w-2xl">
           <span className="font-mono text-xs uppercase tracking-widest text-cyan">
@@ -44,7 +44,7 @@ export function FeaturesSection() {
 
         <div className="grid gap-px overflow-hidden rounded-2xl border border-edge bg-edge sm:grid-cols-2 lg:grid-cols-5">
           {features.map((f) => (
-            <div key={f.title} className="bg-void p-6">
+            <div key={f.title} className="bg-panel p-6">
               <f.icon className="h-5 w-5 text-cyan" strokeWidth={1.75} />
               <h3 className="mt-4 font-display text-base font-semibold text-ink">
                 {f.title}
