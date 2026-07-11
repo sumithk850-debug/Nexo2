@@ -72,6 +72,7 @@ const plans = [
 
 export default function PricingPage() {
   const [comingSoonPlan, setComingSoonPlan] = useState<string | null>(null);
+
   return (
     <main className="min-h-screen bg-void">
       <Nav />
@@ -95,12 +96,12 @@ export default function PricingPage() {
               key={plan.name}
               className={`relative flex flex-col rounded-2xl border p-6 ${
                 plan.highlight
-                  ? "border-cyan/50 bg-panel-raised"
-                  : "border-edge bg-panel"
+                  ? "border-cyan/50 bg-panel shadow-md"
+                  : "border-edge bg-panel shadow-sm"
               }`}
             >
               {plan.highlight && (
-                <div className="absolute -top-3 left-6 flex items-center gap-1 rounded-full bg-cyan px-3 py-1 font-mono text-[10px] font-semibold text-void">
+                <div className="absolute -top-3 left-6 flex items-center gap-1 rounded-full bg-cyan px-3 py-1 font-mono text-[10px] font-semibold text-white">
                   <Sparkles className="h-3 w-3" />
                   MOST POPULAR
                 </div>
@@ -140,8 +141,8 @@ export default function PricingPage() {
                 }
                 className={`mt-8 w-full rounded-full py-2.5 text-sm font-semibold transition ${
                   plan.highlight
-                    ? "bg-cyan text-void hover:bg-cyan-glow"
-                    : "border border-edge text-ink hover:border-cyan/40 hover:bg-panel-raised"
+                    ? "bg-cyan text-white hover:bg-cyan-dim"
+                    : "border border-edge text-ink hover:border-cyan/40"
                 }`}
               >
                 {plan.cta}
@@ -156,7 +157,7 @@ export default function PricingPage() {
           ))}
         </div>
 
-        <div className="mx-auto mt-16 max-w-2xl rounded-2xl border border-edge bg-panel/60 p-6 text-center">
+        <div className="mx-auto mt-16 max-w-2xl rounded-2xl border border-edge bg-panel p-6 text-center shadow-sm">
           <p className="text-sm text-ink-muted">
             Paid plans are launching shortly with local PayHere support. Join
             free today and we will notify you the moment upgrades open.
