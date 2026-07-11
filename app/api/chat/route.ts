@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import { PROVIDER_CONFIG } from "@/lib/providers.server";
 import type { NexoModelId } from "@/lib/models";
 
@@ -11,12 +12,66 @@ interface IncomingMessage {
 
 const GITHUB_ENDPOINT = "https://models.github.ai/inference/chat/completions";
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+const DAILY_MESSAGE_LIMIT = 50;
+
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
+async function checkAndIncrementRateLimit(sessionId: string): Promise<{ allowed: boolean; remaining: number }> {
+  const supabase = getSupabase();
+  const today = new Date().toISOString().slice(0, 10);
+
+  const { data: existing } = await supabase
+    .from("rate_limits")
+    .select("message_count")
+    .eq("session_id", sessionId)
+    .eq("date", today)
+    .maybeSingle();
+
+  const currentCount = existing?.message_count ?? 0;
+
+  if (currentCount >= DAILY_MESSAGE_LIMIT) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  await supabase
+    .from("rate_limits")
+    .upsert(
+      { session_id: sessionId, date: today, message_count: currentCount + 1 },
+      { onConflict: "session_id,date" }
+    );
+
+  return { allowed: true, remaining: DAILY_MESSAGE_LIMIT - currentCount - 1 };
+}
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const modelId = body.modelId as NexoModelId;
     const messages = body.messages as IncomingMessage[];
+    const sessionId = body.sessionId as string | undefined;
+
+    // Rate limiting — only enforced when a sessionId is provided.
+    // This keeps the API safe to call even if the client hasn't set up
+    // a session yet, while still protecting the common path.
+    if (sessionId) {
+      const { allowed, remaining } = await checkAndIncrementRateLimit(sessionId);
+      if (!allowed) {
+        return new Response(
+          JSON.stringify({
+            error: "rate_limit_exceeded",
+            message: `You've reached today's limit of ${DAILY_MESSAGE_LIMIT} messages. Come back tomorrow, or upgrade for unlimited access.`,
+          }),
+          { status: 429 }
+        );
+      }
+      // Remaining count is available here if we want to surface it to the client later.
+      void remaining;
+    }
 
     const config = PROVIDER_CONFIG[modelId];
     if (!config) {
@@ -123,4 +178,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+    }
