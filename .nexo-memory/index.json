@@ -1,17 +1,21 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-16T15:06:13.451Z",
+  "updatedAt": "2026-08-16T15:07:08.240Z",
   "conversations": [
     {
       "chatId": "0bedc05f-266a-46cc-9ff2-54ebd8f03cca",
-      "title": "Nexo conversation",
-      "updatedAt": "2026-08-16T15:06:13.451Z",
+      "title": "Create new tabke named email...",
+      "updatedAt": "2026-08-16T15:07:08.240Z",
       "modelId": "nexio-1.1",
       "keywords": [
+        "named",
+        "aii",
+        "bew",
+        "crate",
         "create",
         "email",
-        "named",
         "new",
+        "nexo",
         "superbase",
         "tabke"
       ]
