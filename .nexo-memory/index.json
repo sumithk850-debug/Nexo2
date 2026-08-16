@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-16T15:06:13.451Z",
+  "conversations": [
+    {
+      "chatId": "0bedc05f-266a-46cc-9ff2-54ebd8f03cca",
+      "title": "Nexo conversation",
+      "updatedAt": "2026-08-16T15:06:13.451Z",
+      "modelId": "nexio-1.1",
+      "keywords": [
+        "create",
+        "email",
+        "named",
+        "new",
+        "superbase",
+        "tabke"
+      ]
+    }
+  ]
+}
