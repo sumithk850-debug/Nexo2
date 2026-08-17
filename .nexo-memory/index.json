@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T01:56:41.326Z",
+  "updatedAt": "2026-08-17T01:59:06.100Z",
   "conversations": [
     {
       "chatId": "0bedc05f-266a-46cc-9ff2-54ebd8f03cca",
       "title": "Create new tabke named email...",
-      "updatedAt": "2026-08-17T01:56:41.326Z",
+      "updatedAt": "2026-08-17T01:59:06.100Z",
       "modelId": "nexio-1.1",
       "keywords": [
         "කරන",
@@ -19,14 +19,19 @@
         "ඔබව",
         "මනට",
         "aii",
+        "already",
         "bew",
+        "continue",
         "crate",
         "create",
         "email",
+        "exactly",
         "new",
         "nexo",
-        "tabke",
-        "එකක"
+        "not",
+        "previous",
+        "provided",
+        "repeat"
       ]
     }
   ]
