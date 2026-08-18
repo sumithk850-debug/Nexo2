@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
+  "title": "Nexo conversation",
+  "updatedAt": "2026-08-18T14:10:45.648Z",
+  "modelId": "spadec-3.5",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hey"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey Hasith! 👋 What would you like to work on next?\n\n```clarification-card\nquestion: Choose the next step you’d like to take.\noptions:\n- [schema] Continue reviewing/adjusting the Supabase schema (RLS policies, etc.)\n- [vercel] Set up or configure the Vercel deployment for your project\n- [other] Something else (please specify)\n```"
+    }
+  ]
+}
