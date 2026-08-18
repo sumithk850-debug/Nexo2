@@ -1,7 +1,16 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T14:24:08.106Z",
+  "updatedAt": "2026-08-18T14:24:50.114Z",
   "conversations": [
+    {
+      "chatId": "ea11206b-f7b2-401d-b137-c5eafa2a7e3f",
+      "title": "Hey",
+      "updatedAt": "2026-08-18T14:24:50.114Z",
+      "modelId": "spadec-3.5",
+      "keywords": [
+        "hey"
+      ]
+    },
     {
       "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
       "title": "Hey",
