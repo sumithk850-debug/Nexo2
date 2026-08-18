@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
   "title": "Hey",
-  "updatedAt": "2026-08-18T14:12:22.663Z",
-  "modelId": "spadec-3.5",
+  "updatedAt": "2026-08-18T14:13:09.833Z",
+  "modelId": "craft-v3",
   "messages": [
     {
       "role": "user",
@@ -44,6 +44,14 @@
     {
       "role": "assistant",
       "content": "I need to fetch the file contents before I can show you what’s inside.\n\n```clarification-card\nquestion: Should I read the file `app/api/chat/route.ts` now?\noptions:\n- [yes] Yes, read the file\n- [no] No, another file instead\n```"
+    },
+    {
+      "role": "user",
+      "content": "Yes, read the file"
+    },
+    {
+      "role": "assistant",
+      "content": "Repository read not verified for `app/api/chat/route.ts`. No file findings are shown for it."
     }
   ]
 }
