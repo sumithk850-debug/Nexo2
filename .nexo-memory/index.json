@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T14:35:31.936Z",
+  "updatedAt": "2026-08-18T15:02:03.300Z",
   "conversations": [
     {
       "chatId": "ea11206b-f7b2-401d-b137-c5eafa2a7e3f",
       "title": "Hey",
-      "updatedAt": "2026-08-18T14:35:31.936Z",
-      "modelId": "brainex-10.8",
+      "updatedAt": "2026-08-18T15:02:03.300Z",
+      "modelId": "nexio-1.1",
       "keywords": [
         "github",
         "read",
