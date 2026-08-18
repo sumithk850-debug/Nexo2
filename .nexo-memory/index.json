@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T14:15:24.633Z",
+  "updatedAt": "2026-08-18T14:15:58.045Z",
   "conversations": [
     {
       "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
       "title": "Hey",
-      "updatedAt": "2026-08-18T14:15:24.633Z",
+      "updatedAt": "2026-08-18T14:15:58.045Z",
       "modelId": "craft-v3",
       "keywords": [
         "api",
@@ -20,7 +20,9 @@
         "route",
         "specific",
         "yes",
+        "එකක",
         "ඔබත",
+        "ඕකක",
         "කරන"
       ]
     },
