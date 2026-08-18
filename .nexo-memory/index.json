@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T14:12:22.663Z",
+  "updatedAt": "2026-08-18T14:13:09.833Z",
   "conversations": [
     {
       "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
       "title": "Hey",
-      "updatedAt": "2026-08-18T14:12:22.663Z",
-      "modelId": "spadec-3.5",
+      "updatedAt": "2026-08-18T14:13:09.833Z",
+      "modelId": "craft-v3",
       "keywords": [
         "api",
         "app",
@@ -15,9 +15,11 @@
         "github",
         "hey",
         "inspect",
+        "read",
         "repo",
         "route",
-        "specific"
+        "specific",
+        "yes"
       ]
     },
     {
