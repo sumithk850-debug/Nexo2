@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
   "title": "Hey",
-  "updatedAt": "2026-08-18T14:13:38.517Z",
+  "updatedAt": "2026-08-18T14:15:24.633Z",
   "modelId": "craft-v3",
   "messages": [
     {
@@ -76,6 +76,14 @@
     {
       "role": "assistant",
       "content": "Great! What would you like to do next?\n\n```clarification-card\nquestion: කරුණාකර ඔබගේ அடுத்த படியைத் தேர்ந்தெடுக்கவும்.\noptions:\n- [inspect] Inspect another file or component\n- [edit] Edit an existing file (add a feature, fix a bug, improve styling)\n- [add] Add a new file or component\n- [other] Something else (please specify)\n```"
+    },
+    {
+      "role": "user",
+      "content": "හොඳයි මට දැන් සිංහලෙන් ඔබත් එක්ක කතා කරන්න ඕන"
+    },
+    {
+      "role": "assistant",
+      "content": "හොඳයි, ඉඳහිට ඉංග්‍රිසි වෙනුවට සිංහලෙන් කතා කරමු. 🙏\n\n### ඔබට අදාලව අඛණ්ඩව කළ හැකි දේ:\n\n| ❓ කරුණාකර ඔබේ ඊළඟ පියවර තෝරන්න |\n|---|\n| **🔎 වෙනත් ගොනුවක් පරීක්ෂා කරන්න** – අවශ්‍ය ගොනුවේ නාමය දීල කියන්න. |\n| **✏️ ගොනුවක් සංස්කරණය කරන්න** – එක් විශේෂාංගයක් එකතු කිරීම, දෝෂය සකස් කිරීම, හෝ UI වැඩිදියුණු කිරීම. |\n| **🆕 නව ගොනුව/කොම්පෝනන්ට් එකක් එක් කරන්න** – ඔබට අවශ්‍ය නව කොඩ්‍ බ්ලොක් එකක් හෝ පිටුවක්. |\n| **❓ වෙනත් කිසිවක්** – ඔබේ අයුතු අවශ්‍යතා හෝ ගැටළු. |\n\nඔබට අවශ්‍ය තේමාව හෝ වැඩි විස්තරයක් දැනුම් දෙන්න; මම ඉක්මණින් උදව් කරමි!"
     }
   ]
 }
