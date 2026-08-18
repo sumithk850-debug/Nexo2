@@ -1,7 +1,16 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T01:59:06.100Z",
+  "updatedAt": "2026-08-18T14:10:45.648Z",
   "conversations": [
+    {
+      "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
+      "title": "Nexo conversation",
+      "updatedAt": "2026-08-18T14:10:45.648Z",
+      "modelId": "spadec-3.5",
+      "keywords": [
+        "hey"
+      ]
+    },
     {
       "chatId": "0bedc05f-266a-46cc-9ff2-54ebd8f03cca",
       "title": "Create new tabke named email...",
