@@ -1,14 +1,15 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T14:24:50.114Z",
+  "updatedAt": "2026-08-18T14:25:17.284Z",
   "conversations": [
     {
       "chatId": "ea11206b-f7b2-401d-b137-c5eafa2a7e3f",
       "title": "Hey",
-      "updatedAt": "2026-08-18T14:24:50.114Z",
+      "updatedAt": "2026-08-18T14:25:17.284Z",
       "modelId": "spadec-3.5",
       "keywords": [
-        "hey"
+        "hey",
+        "කරම"
       ]
     },
     {
