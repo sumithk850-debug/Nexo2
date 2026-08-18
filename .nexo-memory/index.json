@@ -1,17 +1,23 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T14:11:42.150Z",
+  "updatedAt": "2026-08-18T14:11:56.572Z",
   "conversations": [
     {
       "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
       "title": "Hey",
-      "updatedAt": "2026-08-18T14:11:42.150Z",
+      "updatedAt": "2026-08-18T14:11:56.572Z",
       "modelId": "spadec-3.5",
       "keywords": [
+        "api",
+        "app",
         "chek",
+        "component",
         "github",
         "hey",
-        "repo"
+        "inspect",
+        "repo",
+        "route",
+        "specific"
       ]
     },
     {
