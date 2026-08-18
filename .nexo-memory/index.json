@@ -1,19 +1,23 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T14:33:13.817Z",
+  "updatedAt": "2026-08-18T14:34:08.551Z",
   "conversations": [
     {
       "chatId": "ea11206b-f7b2-401d-b137-c5eafa2a7e3f",
       "title": "Hey",
-      "updatedAt": "2026-08-18T14:33:13.817Z",
-      "modelId": "spadec-3.5",
+      "updatedAt": "2026-08-18T14:34:08.551Z",
+      "modelId": "brainex-10.8",
       "keywords": [
         "කරම",
+        "can",
         "example",
+        "github",
         "give",
         "hey",
         "more",
+        "push",
         "tell",
+        "you",
         "අතඇරල",
         "කරන"
       ]
