@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T15:03:33.904Z",
+  "updatedAt": "2026-08-18T15:04:10.274Z",
   "conversations": [
     {
       "chatId": "ea11206b-f7b2-401d-b137-c5eafa2a7e3f",
       "title": "Hey",
-      "updatedAt": "2026-08-18T15:03:33.904Z",
+      "updatedAt": "2026-08-18T15:04:10.274Z",
       "modelId": "nexio-1.1",
       "keywords": [
         "github",
-        "ඔබට",
         "read",
+        "ඔබට",
         "you",
         "කරම",
         "alredy",
@@ -22,6 +22,7 @@
         "give",
         "hey",
         "more",
+        "now",
         "page",
         "push",
         "tell",
@@ -30,8 +31,7 @@
         "ආදර",
         "ආදරණ",
         "කරන",
-        "කරල",
-        "යවන"
+        "කරල"
       ]
     },
     {
