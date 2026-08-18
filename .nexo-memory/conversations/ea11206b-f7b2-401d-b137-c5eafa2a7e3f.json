@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "chatId": "ea11206b-f7b2-401d-b137-c5eafa2a7e3f",
   "title": "Hey",
-  "updatedAt": "2026-08-18T14:33:13.817Z",
-  "modelId": "spadec-3.5",
+  "updatedAt": "2026-08-18T14:34:08.551Z",
+  "modelId": "brainex-10.8",
   "messages": [
     {
       "role": "user",
@@ -52,6 +52,14 @@
     {
       "role": "assistant",
       "content": "## උදාහරණය – `ChatBox` කොම්පොනන්ට් එක `app/chat/page.tsx` වලට එකතු කිරීම  \n\n**1️⃣ `ChatBox` කොම්පොනන්ට් එක (components/ChatBox.tsx)**  \n```tsx\nimport React, { useState } from \"react\";\nimport MessageBubble from \"./MessageBubble\";\nimport ChatInput from \"./ChatInput\";\n\ntype Message = {\n  id: string;\n  role: \"user\" | \"assistant\";\n  content: string;\n};\n\nexport default function ChatBox() {\n  const [messages, setMessages] = useState<Message[]>([]);\n\n  const handleSend = async (text: string) => {\n    const userMsg: Message = {\n      id: crypto.randomUUID(),\n      role: \"user\",\n      content: text,\n    };\n    setMessages((prev) => [...prev, userMsg]);\n\n    try {\n      const res = await fetch(\"/api/chat\", {\n        method: \"POST\",\n        headers: { \"Content-Type\": \"application/json\" },\n        body: JSON.stringify({\n          messages: [...messages, userMsg].map((m) => ({\n            role: m.role,\n            content: m.content,\n          })),\n          model: \"gpt-3.5-turbo\",\n        }),\n      });\n\n      if (!res.ok) throw new Error(\"Chat API error\");\n      const data = await res.json();\n\n      const assistantMsg: Message = {\n        id: crypto.randomUUID(),\n        role: \"assistant\",\n        content: data.reply ?? \"\",\n      };\n      setMessages((prev) => [...prev, assistantMsg]);\n    } catch (e) {\n      console.error(e);\n    }\n  };\n\n  return (\n    <div className=\"flex h-full flex-col bg-gray-100 p-4\">\n      <div className=\"flex-1 overflow-y-auto space-y-2\">\n        {messages.map((msg) => (\n          <MessageBubble key={msg.id} role={msg.role} content={msg.content} />\n        ))}\n      </div>\n      <ChatInput onSend={handleSend} />\n    </div>\n  );\n}\n```\n\n**2️⃣ `ChatBox` භාවිතා කිරීම – `app/chat/page.tsx`**  \n```tsx\nimport ChatBox from \"@/components/ChatBox\";\n\nexport default function ChatPage() {\n  return (\n    <main className=\"h-screen\">\n      {/* මෙන්න අපේ ChatBox UI */}\n      <ChatBox />\n    </main>\n  );\n}\n```\n\n### කෙටි විස්තර  \n- **`ChatBox`**: පණිවුඩ ලැයිස්තුව, `MessageBubble` (පණිවුඩ UI) සහ `ChatInput` (තුළුව) සමඟ සම්පූර්ණ කතාබස් UI එකක්.  \n- **`handleSend`**: පරිශීලක පණිවුඩය UI‑ට එක් කර, `/api/chat` ලැබූ ප්‍රතිචාරය (assistant reply) ලබාගෙන UI‑ට යොදයි.  \n- **`app/chat/page.tsx`**: නව පේජ් එක හෝ දැනට ඇති පේජ් එකට `ChatBox` එක ආයාත (import) කරලා, ඕනෑම තැනක රෙන්ඩර් කරයි.\n\n🔹 **දැන ගැනීමට:**  \n- `MessageBubble` සහ `ChatInput` කොම්පොනන්ට් තියෙනවා (`components/MessageBubble.tsx`, `components/ChatInput.tsx`).  \n- API route (`/api/chat`) ඔබේ `app/api/chat/route.ts` තුළ පර්යන්තය.  \n\nඔබට මෙය copy‑paste කරලා දැන්ම පේජ් එකේ කතාබස් UI පරීක්ෂා කළ හැකි වේ. අනෙකුත් සැකසීම් (CSS, dark‑mode) ඕනේ නම් ඒවත් එක්ක හදන්න පුළුවන්. 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Can you push it to github"
+    },
+    {
+      "role": "assistant",
+      "content": "ඔබගේ `ChatBox` කොම්පෝනන්ට් එක යොදා ගැනීමට **`app/chat/page.tsx`** ගොනුවට импорт සහ UI එකතු කිරීමක් අවශ්‍යයි. මේ ගොනුවේ අවස්ථාන වත්මන් අන්තර්ගතය නොදන්න නිසා, නිවැරදිව සංස්කරණය කිරීම සඳහා එහි පවතින කේතය ලබා දිය හැකිද?  \n\nඉන්පසු, ගොනුවට **import** සහ **`<ChatBox />`** කොම්පෝනන්ට් එක ඇතුළත් කිරීමේ diff එක සකස් කර, ඔබගේ අනුමතිය ලබාගෙන GitHub වෙත commit/push කිරීමට ඉදිරි පියවර ගැනීමේ සැලසුම ඉදිරිපත් කරමි."
     }
   ]
 }
