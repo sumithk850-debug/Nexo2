@@ -1,14 +1,17 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T14:10:45.648Z",
+  "updatedAt": "2026-08-18T14:11:22.425Z",
   "conversations": [
     {
       "chatId": "0dae7b71-c0f4-418c-a061-4770e2ea2e90",
-      "title": "Nexo conversation",
-      "updatedAt": "2026-08-18T14:10:45.648Z",
+      "title": "Hey",
+      "updatedAt": "2026-08-18T14:11:22.425Z",
       "modelId": "spadec-3.5",
       "keywords": [
-        "hey"
+        "chek",
+        "github",
+        "hey",
+        "repo"
       ]
     },
     {
